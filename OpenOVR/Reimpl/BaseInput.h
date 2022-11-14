@@ -532,9 +532,8 @@ private:
 		uint32_t sourcesCount = 0; // Number of sources in the above that are defined
 		uint64_t nextSourcesUpdate = 0; // For caching, the next value of syncSerial this should update at
 
-		// Only used in the case of Pose actions, this is the action space for each subaction path
-		// The indexes match up with allSubactionPaths
-		std::vector<XrSpace> actionSpaces;
+		// Only used in the case of Pose actions
+		XrSpace actionSpace = XR_NULL_HANDLE;
 
 		// Only used in float/vector actions, for calculating deltas
 		struct {
