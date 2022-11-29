@@ -82,8 +82,8 @@ void GLBaseCompositor::Invoke(const vr::Texture_t* texture, const vr::VRTextureB
 	// Calculate how large the area to copy is
 	GLsizei inputWidth, inputHeight, rawFormat;
 	glBindTexture(GL_TEXTURE_2D, src); // Sadly even GLES3.2 doesn't have glGetTextureLevelParameteriv which takes the image directly
-	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &inputWidth);
-	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &inputHeight);
+	inputWidth = 1440;
+	inputHeight = 1584;
 	glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_INTERNAL_FORMAT, &rawFormat);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	XrRect2Di viewport;
@@ -146,6 +146,7 @@ void GLBaseCompositor::Invoke(const vr::Texture_t* texture, const vr::VRTextureB
 		// Just warn, so we can find it in the logs - I fear it may crash in unexpected corner-cases otherwise.
 		// OOVR_ABORTF("OpenGL texture copy failed with err %d", err);
 		OOVR_LOG_ONCE("WARNING: OpenGL texture copy failed!");
+		printf("%d", err);
 	}
 
 	// Release the swapchain - OpenXR will use the last-released image in a swapchain
@@ -194,7 +195,7 @@ void GLBaseCompositor::CheckCreateSwapChain(int width, int height, GLuint rawFor
 	desc.mipCount = 1; // TODO srcDesc.MipLevels;
 	desc.sampleCount = 1;
 	desc.arraySize = 1;
-	desc.usageFlags = XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT;
+	desc.usageFlags = (XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT | XR_SWAPCHAIN_USAGE_SAMPLED_BIT);
 
 	// If the format has changed (or this is the first call), continue on to create the swapchain
 	if (memcmp(&desc, &createInfo, sizeof(desc)) == 0) {

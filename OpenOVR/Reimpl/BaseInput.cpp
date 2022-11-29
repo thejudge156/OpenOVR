@@ -2061,6 +2061,9 @@ VRInputValueHandle_t BaseInput::activeOriginFromSubaction(Action* action, const 
 	// FIXME the docs for xrEnumerateBoundSourcesForAction are wrong and will be updated (source: rpavlik). They don't
 	//  have to return a path listed in the input profile, they can be literally anything (not even a /user/hand/<side>
 	//  prefix is guaranteed). Thus we'll need some sophisticated lying to the application about this.
+	if (action->fullName == "/actions/global/in/righthand" && strcmp(subactionPath, "/user/hand/left") == 0) {
+		subactionPath = "/user/hand/right";
+	}
 
 	// If it's time for an update and this isn't a virtual input, update its sources
 	if (syncSerial >= action->nextSourcesUpdate && action->xr) {
